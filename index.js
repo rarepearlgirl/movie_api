@@ -73,7 +73,7 @@ app.get("/", (req, res) => {
   res.send("Welcome!");
 });
 
-app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) => {
+app.get('/movies', (req, res) => {
   Movies.find()
     .then((movies) => {
       res.status(201).json(movies);
@@ -85,7 +85,7 @@ app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) 
 }); //NEW CODE
 
 // get a movie by the title
-app.get('/movies/:Title', passport.authenticate('jwt', { session: false }), (req, res) => {
+app.get('/movies/:Title', (req, res) => {
   Movies.findOne({ Title: req.params.Title })
     .then((movie) => {
       res.json(movie);
