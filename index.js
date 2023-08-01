@@ -97,7 +97,7 @@ app.get('/movies/:Title', passport.authenticate('jwt', { session: false }), (req
 });
 
 //get a director by name
-app.get('/movies/directors/:DirectorName', passport.authenticate('jwt', { session: false }), (req, res) => {
+app.get('/movies/directors/:DirectorName', (req, res) => {
   Movies.findOne({ "Director.Name": req.params.DirectorName })
     .then((movie) => {
       res.json(movie.Director);
