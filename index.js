@@ -30,9 +30,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
 // Authentification & Login Endpoint
-const passport = require('passport'); // JWT Authentification
-app.use(passport.initialize());
-require('./passport');
+// const passport = require('passport'); // JWT Authentification
+// app.use(passport.initialize());
+// require('./passport');
 
 app.use(cors());
 // app.use(
@@ -109,7 +109,7 @@ app.get('/movies/directors/:DirectorName', (req, res) => {
 });
 
 //get all users
-app.get("/users"), function (req, res) {
+app.get("/users", function (req, res) {
   Users.find()
     .then(function (users) {
       res.status(201).json(users);
@@ -118,7 +118,7 @@ app.get("/users"), function (req, res) {
       console.error(err);
       res.status(500).send("Error: " + err);
     });
-};
+});
 
 // allow users to register
 app.post('/users',
@@ -135,11 +135,11 @@ app.post('/users',
     if (!errors.isEmpty()) {
       return res.status(422).json({ errors: errors.array() });
     }
-    const hashedPassword = Users.hashPassword(req.body.Password);
+    // const hashedPassword = Users.hashPassword(req.body.Password);
 
     const userData = {
       Name: req.body.Name,
-      Password: hashedPassword, // Use the hashed password here
+      Password: Password, // Use the hashed password here
       Email: req.body.Email,
       Birthday: req.body.Birthday
     }
@@ -156,7 +156,7 @@ app.post('/users',
 //get a user by username
 app.get('/users/:Username', (req, res) => {
   console.log(req.params.Username);  // Added
-  Users.findOne({ Name: req.params.Username })
+  Users.findOne({ Name: { $regex: new RegExp(`^${req.params.Username}$`, 'i') } })
     .then((user) => {
       res.json(user);
     })
@@ -170,7 +170,7 @@ app.patch('/users/:Username', (req, res) => {
   const movieData = req.body;
 
   Users.findOneAndUpdate(
-    { name: req.params.Username },
+    { name: req.params.Name },
     { $set: movieData }
   )
     .then(() => {
@@ -183,7 +183,7 @@ app.patch('/users/:Username', (req, res) => {
 
 // Add a movie to a user's list of favorites
 app.post('/users/:Username/favoriteMovies/:MovieTitle', (req, res) => {
-  Users.findOneAndUpdate({ name: req.params.Username }, {
+  Users.findOneAndUpdate({ name: req.params.Name }, {
     $push: { favoriteMovies: req.params.MovieTitle }
   })
     .then(() => {
@@ -197,7 +197,7 @@ app.post('/users/:Username/favoriteMovies/:MovieTitle', (req, res) => {
 // delete a movie (with exec)
 app.delete('/users/:Username/favoriteMovies/:MovieTitle', (req, res) => {
   Users.findOneAndUpdate(
-    { Username: req.params.Username },
+    { Username: req.params.Name },
     { $pull: { favoriteMovies: req.params.MovieTitle } }
   )
     .exec() // Add the .exec() method to execute the query
@@ -212,12 +212,12 @@ app.delete('/users/:Username/favoriteMovies/:MovieTitle', (req, res) => {
 
 // Delete a user by username
 app.delete('/users/:Username', (req, res) => {
-  Users.findOneAndRemove({ Name: req.params.Username })
+  Users.findOneAndRemove({ Name: req.params.Name })
     .then((user) => {
       if (!user) {
-        res.status(400).send(req.params.Username + ' was not found');
+        res.status(400).send(req.params.Name + ' was not found');
       } else {
-        res.status(200).send(req.params.Username + ' was deleted.');
+        res.status(200).send(req.params.Name + ' was deleted.');
       }
     })
     .catch((err) => {
@@ -249,7 +249,11 @@ app.use((err, req, res, next) => {
   });
 });
 
-const port = process.env.PORT || 8080;
-app.listen(port, '0.0.0.0', () => {
-  console.log('Listening on Port ' + port);
+// const port = process.env.PORT || 8080;
+// app.listen(port, '0.0.0.0', () => {
+//   console.log('Listening on Port ' + port);
+// });
+
+app.listen(8080, () => {
+  console.log('Server is running on port 8080');
 });
