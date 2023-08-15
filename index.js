@@ -29,10 +29,16 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
-// Authentification & Login Endpoint
-// const passport = require('passport'); // JWT Authentification
-// app.use(passport.initialize());
-// require('./passport');
+// Middleware
+app.use(express.json());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static('public'));
+
+// Authentication & Login Endpoint
+const passport = require('passport'); // JWT Authentication
+app.use(passport.initialize());
+require('./passport');
 
 app.use(cors());
 // app.use(
@@ -50,7 +56,7 @@ app.use(cors());
 //     },
 //   })
 // );
-let auth = require('./auth')(app) // Login HTML Authentification
+let auth = require('./auth')(app) // Login HTML Authentication
 
 let myLogger = (req, res, next) => {
   console.log(req.url);
@@ -73,7 +79,7 @@ app.get("/", (req, res) => {
   res.send("Welcome!");
 });
 
-app.get('/movies', (req, res) => {
+app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) => {
   Movies.find()
     .then((movies) => {
       res.status(201).json(movies);
@@ -82,7 +88,7 @@ app.get('/movies', (req, res) => {
       console.error(error);
       res.status(500).send('Error: ' + error);
     });
-}); //NEW CODE
+});
 
 // get a movie by the title
 app.get('/movies/:Title', (req, res) => {
