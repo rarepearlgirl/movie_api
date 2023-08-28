@@ -7,6 +7,8 @@ const morgan = require("morgan");
 const mongoose = require("mongoose");
 const Models = require("./models.js");
 const cors = require('cors');
+const jwt = require('jsonwebtoken');
+
 const { check, validationResult } = require('express-validator');
 
 const Movies = Models.Movie;
@@ -149,10 +151,13 @@ app.post('/users_add',
       Email: req.body.Email,
       Birthday: req.body.Birthday
     }
+
+    // const token = jwt.sign(payload, 'yourSecretKey', { expiresIn: '1h' });
+
     const user = new Users(userData);
     user.save()
       .then(() => {
-        res.status(201).json({ message: 'User saved successfully' });
+        res.status(201).json({ message: 'User saved successfully'});
       })
       .catch(error => {
         res.status(500).json({ error: `An error occurred while saving the user: ${error.message}` });
