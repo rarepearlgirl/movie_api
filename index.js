@@ -116,12 +116,12 @@ app.get("/users", passport.authenticate('jwt', { session: false }), function (re
     })
     .catch(function (err) {
       console.error(err);
-      res.status(500).send("Error: " + err);
+      res.status(500).send("Error: " + err);mongod
     });
 });
 
 // allow users to register
-app.post('/users',
+app.post('/users_add',
   [
     check('Name', 'Name is required').isLength({ min: 3 }),
     check('Password', 'Password is required').not().isEmpty(),
