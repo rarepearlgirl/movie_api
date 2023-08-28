@@ -18,10 +18,12 @@ require('./passport'); // Your local passport file
 module.exports = (router) => {
   router.post('/login', (req, res) => {
     console.log('Login body:', req.body);  // Log the login request body
+    console.log(111111111, "!!!!!!LOGINNNNNN", req.body);
     passport.authenticate('local', { session: false }, (error, user, info) => {
+
       if (error || !user) {
         return res.status(400).json({
-          message: `Authentication failed ${error ? error.message : ''}`,
+          message: `Richard ${error ? error.message : ''}`,
           user: user
         });
       }
