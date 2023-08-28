@@ -141,11 +141,11 @@ app.post('/users_add',
     if (!errors.isEmpty()) {
       return res.status(422).json({ errors: errors.array() });
     }
-    // const hashedPassword = Users.hashPassword(req.body.Password);
+    const hashedPassword = Users.hashPassword(req.body.Password);
 
     const userData = {
       Name: req.body.Name,
-      Password: Password, // Use the hashed password here
+      Password: hashedPassword, // Use the hashed password here
       Email: req.body.Email,
       Birthday: req.body.Birthday
     }
