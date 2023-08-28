@@ -159,51 +159,6 @@ app.post('/users_add',
       })
   });
 
-// app.post('/login',
-//   [
-//     check('Password', 'Password is required').not().isEmpty(),
-//     check('Email', 'Email does not appear to be valid').isEmail(),
-//   ],
-//   (req, res) => {
-//     console.log(req.body); // Log the request body
-
-//     // check the validation object for errors
-//     const errors = validationResult(req);
-//     if (!errors.isEmpty()) {
-//       return res.status(422).json({ errors: errors.array() });
-//     }
-//     const validatePasswordToken = Users.validatePassword(req.body.Password);
-
-//     const userData = {
-//       Name: req.body.Name,
-//       Password: hashedPassword, // Use the hashed password here
-//       Email: req.body.Email,
-//       Birthday: req.body.Birthday
-//     }
-
-//     Users.findOne({ Name: req.body.Name })
-//       .then((user) => {
-//         user.name
-//         // res.json(user);
-//       })
-//       .catch((err) => {
-//         console.error(err);
-//         res.status(500).send('Error: ' + err);
-//       });
-
-//     // const user = new Users(userData);
-
-//     // user.save()
-//     //   .then(() => {
-//     //     res.status(201).json({ message: 'User saved successfully' });
-//     //   })
-//     //   .catch(error => {
-//     //     res.status(500).json({ error: `An error occurred while saving the user: ${error.message}` });
-//     //   })
-//   });
-
-
-
 //get a user by username
 app.get('/users/:Username', (req, res) => {
   console.log(req.params.Username);  // Added
