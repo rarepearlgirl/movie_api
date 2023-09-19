@@ -13,7 +13,7 @@ const { check, validationResult } = require('express-validator');
 
 const Movies = Models.Movie;
 const Users = Models.User;
-
+//mongodb+srv://draculahgirl:<password>@cluster0.triplny.mongodb.net/?retryWrites=true&w=majority//
 mongoose.connect("mongodb+srv://draculahgirl:7cBC1LVGLZ8KdOOU@cluster0.triplny.mongodb.net/myFlixDB?retryWrites=true&w=majority", { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
     console.log('Connected to MongoDB');
@@ -124,7 +124,7 @@ app.get("/users", function (req, res) {
     })
     .catch(function (err) {
       console.error(err);
-      res.status(500).send("Error: " + err);mongod
+      res.status(500).send("Error: " + err);
     });
 });
 
@@ -223,7 +223,7 @@ app.delete('/users/:Username/favoriteMovies/:MovieTitle', (req, res) => {
 
 // Delete a user by username
 app.delete('/users/:Username', (req, res) => {
-  Users.findOneAndRemove({ Name: req.params.Name })
+  Users.findOneAndRemove({ Name: req.params.Username })
     .then((user) => {
       if (!user) {
         res.status(400).send(req.params.Name + ' was not found');
