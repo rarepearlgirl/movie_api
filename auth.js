@@ -22,7 +22,7 @@ module.exports = (router) => {
 
       if (error || !user) {
         return res.status(400).json({
-          message: `Richard ${error ? error.message : ''}`,
+          message: `Login ${error ? error.message : ''}`,
           user: user
         });
       }

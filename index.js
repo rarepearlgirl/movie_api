@@ -26,12 +26,6 @@ mongoose.connect("mongodb+srv://draculahgirl:7cBC1LVGLZ8KdOOU@cluster0.triplny.m
   const app = express();
 
 // Middleware
-// app.use(express.json());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static('public'));
-
-// Middleware
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -177,11 +171,11 @@ app.get('/users/:Username', (req, res) => {
     });
 });
 
-app.patch('/users/:Username', (req, res) => {
+app.put('/users/:Username', (req, res) => {
   const movieData = req.body;
 
   Users.findOneAndUpdate(
-    { name: req.params.Name },
+    { Name: req.params.Username },
     { $set: movieData }
   )
     .then(() => {
@@ -194,7 +188,7 @@ app.patch('/users/:Username', (req, res) => {
 
 // Add a movie to a user's list of favorites
 app.post('/users/:Username/favoriteMovies/:MovieTitle', (req, res) => {
-  Users.findOneAndUpdate({ name: req.params.Name }, {
+  Users.findOneAndUpdate({ Name: req.params.Username }, {
     $push: { favoriteMovies: req.params.MovieTitle }
   })
     .then(() => {
@@ -208,7 +202,7 @@ app.post('/users/:Username/favoriteMovies/:MovieTitle', (req, res) => {
 // delete a movie (with exec)
 app.delete('/users/:Username/favoriteMovies/:MovieTitle', (req, res) => {
   Users.findOneAndUpdate(
-    { Username: req.params.Name },
+    { Name: req.params.Username },
     { $pull: { favoriteMovies: req.params.MovieTitle } }
   )
     .exec() // Add the .exec() method to execute the query
@@ -222,8 +216,8 @@ app.delete('/users/:Username/favoriteMovies/:MovieTitle', (req, res) => {
 
 
 // Delete a user by username
-app.delete('/users/:Username', (req, res) => {
-  Users.findOneAndRemove({ Name: req.params.Username })
+app.delete('/users/:Name', (req, res) => {
+  Users.findOneAndRemove({ Name: req.params.Name })
     .then((user) => {
       if (!user) {
         res.status(400).send(req.params.Name + ' was not found');
