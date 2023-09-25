@@ -172,12 +172,23 @@ app.get('/users/:Username', (req, res) => {
 });
 
 app.put('/users/:Username', (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).json({ errors: errors.array() });
+  }
   const movieData = req.body;
   const hashedPassword = Users.hashPassword(req.body.Password);
 
+  const userData = {
+    Name: req.body.Name,
+    Password: hashedPassword, // Use the hashed password here
+    Email: req.body.Email,
+    Birthday: req.body.Birthday
+  }
+
   Users.findOneAndUpdate(
     { Name: req.params.Username },
-    { $set: { ...movieData, Password: hashedPassword } }
+    { $set: userData }
   )
     .then(() => {
       res.send({ message: "success" });
