@@ -173,10 +173,11 @@ app.get('/users/:Username', (req, res) => {
 
 app.put('/users/:Username', (req, res) => {
   const movieData = req.body;
+  const hashedPassword = Users.hashPassword(req.body.Password);
 
   Users.findOneAndUpdate(
     { Name: req.params.Username },
-    { $set: movieData }
+    { $set: { ...movieData, Password: hashedPassword } }
   )
     .then(() => {
       res.send({ message: "success" });
