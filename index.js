@@ -36,7 +36,7 @@ const passport = require('passport'); // JWT Authentication
 app.use(passport.initialize());
 require('./passport');
 
-const allowedOrigins = ['http://localhost:4200', 'https://rarepearlgirl.github.io'];
+const allowedOrigins = ['http://localhost:4200', 'https://rarepearlgirl.github.io', 'https://movie-mania-777.netlify.app/'];
 
 app.use(cors());
 // app.use(
