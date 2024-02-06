@@ -36,6 +36,8 @@ const passport = require('passport'); // JWT Authentication
 app.use(passport.initialize());
 require('./passport');
 
+const allowedOrigins = ['http://localhost:4200', 'https://rarepearlgirl.github.io'];
+
 app.use(cors());
 // app.use(
 //   cors({
@@ -176,7 +178,7 @@ app.put('/users/:Username', (req, res) => {
   if (!errors.isEmpty()) {
     return res.status(422).json({ errors: errors.array() });
   }
-  const movieData = req.body;
+
   const hashedPassword = Users.hashPassword(req.body.Password);
 
   const userData = {
