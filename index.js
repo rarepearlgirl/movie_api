@@ -247,10 +247,11 @@ app.get('/users/:Username/favoriteMovies', (req, res) => {
 
 // delete a movie (with exec)
 app.delete('/users/:Username/favoriteMovies/:MovieId', (req, res) => {
-  Users.FavoriteMovies.findOneAndRemove(
-    { MovieId: req.params.MovieId }
+  Users.findOneAndUpdate(
+    { Name: req.params.Username },
+    { $pull: { FavoriteMovies: req.params.MovieId } }
   )
-    .exec() 
+    .exec() // Add the .exec() method to execute the query
     .then(() => {
       res.send({ message: "success" });
     })
@@ -258,7 +259,6 @@ app.delete('/users/:Username/favoriteMovies/:MovieId', (req, res) => {
       res.status(500).send("Error" + err);
     });
 });
-
 
 // Delete a user by username
 app.delete('/users/:Name', (req, res) => {
