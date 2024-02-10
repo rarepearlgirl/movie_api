@@ -203,7 +203,7 @@ app.put('/users/:Username', (req, res) => {
 // Add a movie to a user's list of favorites
 app.post('/users/:Username/favoriteMovies/:MovieId', (req, res) => {
   Users.findOneAndUpdate({ Name: req.params.Username }, {
-    $push: { favoriteMovies: req.params.MovieId }
+    $push: { FavoriteMovies: req.params.MovieId }
   })
     .then(() => {
       res.send({ message: "success" });
@@ -222,21 +222,21 @@ app.get('/users/:Username/favoriteMovies', (req, res) => {
         return res.status(404).json({ error: "User not found" });
       }
 
-      const userFavoriteMovieIds = user.favoriteMoviesIds;
-      res.json({ favoriteMovies: userFavoriteMovieIds });      
-      // Movies.find({ _id: { $in: userFavoriteMovieIds } })
-      //   .then((favoriteMovies) => {
-      //     if (!favoriteMovies) {
-      //       return res.status(404).json({ error: "Favorite movies not found" });
-      //     }
+      const userFavoriteMovieIds = user.FavoriteMovies;
+      // res.json({ favoriteMovies: userFavoriteMovieIds });      
+      Movies.find({ _id: { $in: userFavoriteMovieIds } })
+        .then((favoriteMovies) => {
+          if (!favoriteMovies) {
+            return res.status(404).json({ error: "Favorite movies not found" });
+          }
 
-      //     // Return the filtered movies as response
-      //     res.json({ favoriteMovies: favoriteMovies });
-      //   })
-      //   .catch((err) => {
-      //     console.error("Error finding favorite movies:", err);
-      //     res.status(500).json({ error: "Internal server error" });
-      //   });
+          // Return the filtered movies as response
+          res.json({ favoriteMovies: favoriteMovies });
+        })
+        .catch((err) => {
+          console.error("Error finding favorite movies:", err);
+          res.status(500).json({ error: "Internal server error" });
+        });
     })
     .catch((err) => {
       console.error("Error finding user:", err);
@@ -249,7 +249,7 @@ app.get('/users/:Username/favoriteMovies', (req, res) => {
 app.delete('/users/:Username/favoriteMovies/:MovieId', (req, res) => {
   Users.findOneAndUpdate(
     { Name: req.params.Username },
-    { $pull: { favoriteMovies: req.params.MovieId } }
+    { $pull: { FavoriteMovies: req.params.MovieId } }
   )
     .exec() // Add the .exec() method to execute the query
     .then(() => {
