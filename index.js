@@ -261,13 +261,13 @@ app.delete('/users/:Username/favoriteMovies/:MovieId', (req, res) => {
 });
 
 // Delete a user by username
-app.delete('/users/:Name', (req, res) => {
-  Users.findOneAndRemove({ Name: req.params.Name })
+app.delete('/users/:UserId', (req, res) => {
+  Users.findOneAndRemove({ _id: req.params.UserId })
     .then((user) => {
       if (!user) {
-        res.status(400).send(req.params.Name + ' was not found');
+        res.status(400).send(req.params.UserId + ' was not found');
       } else {
-        res.status(200).send(req.params.Name + ' was deleted.');
+        res.status(200).send(req.params.UserId + ' was deleted.');
       }
     })
     .catch((err) => {
