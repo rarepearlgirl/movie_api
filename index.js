@@ -247,11 +247,10 @@ app.get('/users/:Username/favoriteMovies', (req, res) => {
 
 // delete a movie (with exec)
 app.delete('/users/:Username/favoriteMovies/:MovieId', (req, res) => {
-  Users.findOneAndUpdate(
-    { Name: req.params.Username },
-    { $pull: { FavoriteMovies: req.params.MovieId } }
+  Users.FavoriteMovies.findOneAndRemove(
+    { MovieId: req.params.MovieId }
   )
-    .exec() // Add the .exec() method to execute the query
+    .exec() 
     .then(() => {
       res.send({ message: "success" });
     })
