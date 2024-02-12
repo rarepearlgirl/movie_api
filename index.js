@@ -173,6 +173,7 @@ app.get('/users/:Username', (req, res) => {
     });
 });
 
+//update user info
 app.put('/users/:Username', (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
