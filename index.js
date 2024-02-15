@@ -77,6 +77,19 @@ app.get("/", (req, res) => {
   res.send("Welcome!");
 });
 
+/**
+ * Handle GET requests to access all movies.
+ *
+ * @function
+ * @name getAllMovies
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ * @returns {Promise<void>} - A Promise that resolves when the movie request process is complete.
+ * @throws {Error} - If there is an unexpected error during the process or if permission is denied.
+ * @returns {Object}[] allMovies - The array of all movies in the database.
+ * 
+ */
+
 app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) => {
   Movies.find()
     .then((movies) => {
@@ -87,6 +100,20 @@ app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) 
       res.status(500).send('Error: ' + error);
     });
 });
+
+
+/**
+ * Handle GET requests to access for a specific movie.
+ *
+ * @function
+ * @name getMovie
+ * @param {Object} req - Express request object with parameter: movieId (movie ID).
+ * @param {Object} res - Express response object.
+ * @returns {Promise<void>} - A Promise that resolves when the movie request process is complete.
+ * @throws {Error} - If there is an unexpected error during the process or if permission is denied.
+ * @returns {Object} reqMovie - The object containing the data for the requested movie.
+ * 
+ */
 
 // get a movie by the title
 app.get('/movies/:Title', (req, res) => {
@@ -99,6 +126,20 @@ app.get('/movies/:Title', (req, res) => {
       res.status(500).send('Error: ' + err);
     });
 });
+
+
+/**
+ * Handle GET requests to access for a specific director.
+ *
+ * @function
+ * @name getDirector
+ * @param {Object} req - Express request object with parameter: directorName (director name).
+ * @param {Object} res - Express response object.
+ * @returns {Promise<void>} - A Promise that resolves when the director request process is complete.
+ * @throws {Error} - If there is an unexpected error during the process or if permission is denied.
+ * @returns {Object} reqDirector - The object containing the data for the requested director.
+ * 
+ */
 
 //get a director by name
 app.get('/movies/directors/:DirectorName', (req, res) => {
@@ -124,6 +165,19 @@ app.get("/users", function (req, res) {
     });
 });
 
+/**
+ * Handle POST requests to create a new user.
+ *
+ * @function
+ * @name createUser
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ * @returns {Promise<void>} - A Promise that resolves when the user creation process is complete.
+ * @throws {Error} - If there is an unexpected error during the user creation process.
+ * @returns {Object} newUser - The newly created user object. Sent in the response on success.
+ * 
+ */
+
 // allow users to register
 app.post('/users_add',
   [
@@ -147,6 +201,8 @@ app.post('/users_add',
       Email: req.body.Email,
       Birthday: req.body.Birthday
     }
+
+    
 
     // const token = jwt.sign(payload, 'yourSecretKey', { expiresIn: '1h' });
 
@@ -172,6 +228,20 @@ app.get('/users/:Username', (req, res) => {
       res.status(500).send('Error: ' + err);
     });
 });
+
+/**
+ * Handle PUT requests to update user information.
+ *
+ * @function
+ * @name updateUser
+ * @param {Object} req - Express request object with parameters: id (user ID).
+ * @param {Object} res - Express response object.
+ * @returns {Promise<void>} - A Promise that resolves when the user update process is complete.
+ * @throws {Error} - If there is an unexpected error during the process or if permission is denied.
+ * @fires {Object} updatedUser - The updated user object sent in the response on success.
+ * @description
+ *   Expects at least one updatable field (username, password, email, birthday) in the request body.
+ */
 
 //update user info
 app.put('/users/:Username', (req, res) => {
@@ -200,6 +270,19 @@ app.put('/users/:Username', (req, res) => {
       res.status(500).send("Error" + err);
     });
 });
+
+
+/**
+ * Handle POST requests to add a movie to a user's favorites.
+ *
+ * @function
+ * @name addFavoriteMovie
+ * @param {Object} req - Express request object with parameters: id (user ID), movieId (movie ID).
+ * @param {Object} res - Express response object.
+ * @returns {Promise<void>} - A Promise that resolves when the movie addition process is complete.
+ * @throws {Error} - If there is an unexpected error during the process or if permission is denied.
+ * @returns {Object} updatedUser - The updated user object (including the added movie) sent in the response on success.
+ */
 
 // Add a movie to a user's list of favorites
 app.post('/users/:Username/favoriteMovies/:MovieId', (req, res) => {
@@ -245,6 +328,17 @@ app.get('/users/:Username/favoriteMovies', (req, res) => {
     });
 });
 
+/**
+ * Handle DELETE requests to remove a movie from a user's favorites.
+ *
+ * @function
+ * @name removeFavoriteMovie
+ * @param {Object} req - Express request object with parameters: id (user ID), movieId (movie ID).
+ * @param {Object} res - Express response object.
+ * @returns {Promise<void>} - A Promise that resolves when the movie removal process is complete.
+ * @throws {Error} - If there is an unexpected error during the process or if permission is denied.
+ * @fires {Object} updatedUser - The updated user object (after removing the movie) sent in the response on success.
+ */
 
 // delete a movie (with exec)
 app.delete('/users/:Username/favoriteMovies/:MovieId', (req, res) => {
@@ -261,6 +355,18 @@ app.delete('/users/:Username/favoriteMovies/:MovieId', (req, res) => {
     });
 });
 
+/**
+ * Handle DELETE requests to delete a user.
+ *
+ * @function
+ * @name deleteUser
+ * @param {Object} req - Express request object with parameters: id (user ID).
+ * @param {Object} res - Express response object.
+ * @returns {Promise<void>} - A Promise that resolves when the user deletion process is complete.
+ * @throws {Error} - If there is an unexpected error during the process or if permission is denied.
+ * @fires {string} message - A message indicating the result of the user deletion process.
+ */
+
 // Delete a user by username
 app.delete('/users/:UserId', (req, res) => {
   Users.findOneAndRemove({ _id: req.params.UserId })
@@ -276,6 +382,20 @@ app.delete('/users/:UserId', (req, res) => {
       res.status(500).send('Error: ' + err);
     });
 });
+
+
+/**
+ * Handle GET requests to access for a specific genre.
+ *
+ * @function
+ * @name getGenre
+ * @param {Object} req - Express request object with parameter: genreName (genre name).
+ * @param {Object} res - Express response object.
+ * @returns {Promise<void>} - A Promise that resolves when the genre request process is complete.
+ * @throws {Error} - If there is an unexpected error during the process or if permission is denied.
+ * @returns {Object} reqGenre - The object containing the data for the requested genre.
+ * 
+ */
 
 //get a genre 
 app.get('/movies/genres/:GenreName', (req, res) => {
